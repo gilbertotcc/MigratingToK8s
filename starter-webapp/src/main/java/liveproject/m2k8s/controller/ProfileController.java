@@ -68,7 +68,7 @@ public class ProfileController {
     @ResponseStatus(HttpStatus.OK)
     public Profile getProfile(@PathVariable String username) {
         log.debug(format("Reading profile for user %s", username));
-        return Optional.ofNullable(profileRepository.findByUsername(username))
+        return profileRepository.findByUsername(username)
                 .orElseThrow(ProfileNotFound::new);
     }
 
@@ -79,7 +79,7 @@ public class ProfileController {
             @PathVariable String username,
             @RequestBody CreateProfileRequestBody createProfileRequestBody) {
         log.debug("Updating profile for user {}", username);
-        Profile dbProfile = Optional.ofNullable(profileRepository.findByUsername(username))
+        Profile dbProfile = profileRepository.findByUsername(username)
                 .orElseThrow(ProfileNotFound::new);
         boolean dirty = false;
         if (!StringUtils.isEmpty(createProfileRequestBody.getEmail())
@@ -108,7 +108,7 @@ public class ProfileController {
     @ResponseBody
     public byte[] getProfileImage(@PathVariable String username) throws IOException {
         log.debug("Reading image for user {}", username);
-        Profile profile = Optional.ofNullable(profileRepository.findByUsername(username))
+        Profile profile = profileRepository.findByUsername(username)
                 .orElseThrow(ProfileNotFound::new);
         if ((profile == null) || StringUtils.isEmpty(profile.getImageFileName())) {
             try (InputStream inputStream = defaultImage.getInputStream()) {
@@ -139,7 +139,7 @@ public class ProfileController {
             byte[] bytes = file.getBytes();
             Path path = Paths.get(uploadFolder, format("%s.jpg", username));
             Files.write(path, bytes);
-            Profile profile = Optional.ofNullable(profileRepository.findByUsername(username))
+            Profile profile = profileRepository.findByUsername(username)
                     .orElseThrow(ProfileNotFound::new);
             profile.setImageFileName(path.toString());
             profile.setImageFileContentType(contentType);
