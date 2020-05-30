@@ -14,13 +14,14 @@ import org.springframework.test.context.ActiveProfiles;
 
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,7 +42,7 @@ public class ProfileControllerTest {
     @Test
     public void shouldGetProfile() throws Exception {
         Profile profile = aProfile();
-        when(profileRepository.findByUsername(any())).thenReturn(profile);
+        when(profileRepository.findByUsername(any())).thenReturn(Optional.of(profile));
 
         String savedJson = objectMapper.writeValueAsString(profile);
 
